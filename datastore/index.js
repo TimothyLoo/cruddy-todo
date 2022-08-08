@@ -30,10 +30,23 @@ exports.create = (text, callback) => {
 };
 
 exports.readAll = (callback) => {
-  var data = _.map(items, (text, id) => {
-    return { id, text };
-  });
-  callback(null, data);
+  // I - callback function
+  // O - return array objects {id:, text:}
+
+  // Read dataDir
+  let filePath = exports.dataDir + '/';
+  var data = _.map(fs.readdir(filePath, (err, files) => {
+    if (err) {
+      callback (null, 0);
+    } else {
+      for (let file of files) {
+        let val = file.substring(0, file.indexOf('.'));
+        file = {id: val, text: val};
+        data.push(file);
+      }
+      callback(null, data);
+    }
+  }));
 };
 
 exports.readOne = (id, callback) => {
