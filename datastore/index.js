@@ -62,19 +62,30 @@ exports.readOne = (id, callback) => {
       callback (null, {id: id, text: data});
     }
   });
-
-  // console.log(filePath);
-  // var text = items[id];
-  // if (!text) {
-  // } else {
-  //   callback(null, { id, text });
-  // }
 };
 
 exports.update = (id, text, callback) => {
+  // I - id, text, callback
+
+  let filePath = exports.dataDir + '/' + id + '.txt';
+  // find the file with readFile
+  fs.readFile(filePath, 'utf8', (err, data)=> {
+    if (err) {
+      callback(new Error(`No item with id: ${id}`));
+    } else {
+      // call write File to overwrite
+      fs.writeFile(filePath, text, (err, data)=>{
+        if (err) {
+          callback(new Error(`Overwrite at ${id} failed`));
+        } else {
+          callback(null, {id: id, text: text});
+        }
+      });
+    }
+
+  });
   var item = items[id];
   if (!item) {
-    callback(new Error(`No item with id: ${id}`));
   } else {
     items[id] = text;
     callback(null, { id, text });
