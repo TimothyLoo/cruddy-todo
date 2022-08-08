@@ -38,9 +38,34 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = () => {
-  counter = counter + 1;
-  return zeroPaddedNumber(counter);
+exports.getNextUniqueId = (callback) => {
+  // I - callback function that takes in params err & id
+  // O - returns uniqueId as a zero padded string
+
+  // read counter.txt file
+  // I - callback function that takes in err & data of file text
+  // if no file, set err to null & counter starts at 0, else set counter to number in data file
+  // call the callback function to set error to null, and set id equal to param counter to a zeroPaddedNumber
+  readCounter((err, counter)=> {
+    if (err) {
+      callback (null, 0);
+    } else {
+      // test: should update the counter file with the next value
+      // call writeCounter
+      // I - integer count, callback function
+      // pass in counter + 1 for count, define callback function
+      // if err, callback err = null and id response = 0
+      // else, callback function set err = null, id = numStr which is a zeroPaddedNumber of the incremented counter
+
+      writeCounter(counter + 1, (err, numStr)=>{
+        if (err) {
+          callback(null, 0);
+        } else {
+          callback(null, numStr);
+        }
+      });
+    }
+  });
 };
 
 
